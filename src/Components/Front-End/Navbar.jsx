@@ -25,7 +25,7 @@ const Navbar = () => {
           <img
             src={logo}
             alt="Logo"
-            style={{ height: 40, width: 150 }}
+            style={{ height: 'auto', width: 150, objectFit:"cover" }}
           />
         </Button>
         <StyledIconButton

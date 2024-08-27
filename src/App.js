@@ -3,7 +3,7 @@ import "./App.css";
 import { Grid } from "@mui/material";
 import FileInput from "./Components/file-input";
 import Navbar from "./Components/Front-End/Navbar";
-import Sidebar from "./Components/Front-End/Sidebar";
+// import Sidebar from "./Components/Front-End/Sidebar";
 import FileConverter from "./Components/file-converter";
 import ImgFile from "./Components/img-file";
 
@@ -15,7 +15,7 @@ function App() {
 
   return (
     <div style={{ height: "100dvh", display: 'flex'}}>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div style={{ flexGrow: 1 }}>
         <Navbar />
         <Grid container sx={{ py:18, px:4}}>
