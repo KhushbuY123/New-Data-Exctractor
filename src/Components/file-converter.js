@@ -95,7 +95,7 @@ function FileConverter({ pdfUrl }) {
         return
       }
 
-
+   // Send the array of base64 images to the API
       const response = await fetch("http://localhost:4000/pdfupload", {
         method: "POST",
         headers: {
@@ -110,8 +110,8 @@ function FileConverter({ pdfUrl }) {
       if (!response.ok) {
         throw new Error(data.message || "Something went wrong")
       }
-
-
+ 
+    // Set extracted text
     } catch (error) {
       console.log(error.message)
     } finally {
@@ -119,12 +119,12 @@ function FileConverter({ pdfUrl }) {
       setDataLoader(false)
     }
   }
-
+   // Clean the raw JSON string
   const cleanAndParseJson = (rawJson) => {
     const cleanedJsonString = rawJson
       .replace(/^```json\s*/, "")
       .replace(/\s*```$/, "")
-
+   // Parse the cleaned JSON string
     try {
       const parsedJson = JSON.parse(cleanedJsonString)
       return parsedJson
