@@ -1,4 +1,5 @@
-import {  RemoveRedEye } from "@mui/icons-material"
+
+import { RemoveRedEye } from "@mui/icons-material"
 import {
   Box,
   Button,
@@ -6,8 +7,8 @@ import {
   Grid,
   IconButton,
   Stack,
-  Typography,
 } from "@mui/material"
+import SplitPane from "react-split-pane"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
@@ -86,15 +87,6 @@ function FileConverter({ pdfUrl }) {
     myRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
   }, [imageUrls])
 
-  // const downloadImage = (url, index) => {
-  //   const a = document.createElement("a")
-  //   a.href = url
-  //   a.download = `${fileName}_${index + 1}.png`
-  //   document.body.appendChild(a)
-  //   a.click()
-  //   document.body.removeChild(a)
-  //   handleClose()
-  // }
   const ExtractData = async (base64Images) => {
     setDataLoader(true)
     try {
@@ -103,24 +95,23 @@ function FileConverter({ pdfUrl }) {
         return
       }
 
-      // Send the array of base64 images to the API
+
       const response = await fetch("http://localhost:4000/pdfupload", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ base64Images }), // Send the array
+        body: JSON.stringify({ base64Images }), 
       })
 
       const data = await response.json()
       setExtractedData(data?.extractedTexts)
-      setDataLoader(false)
 
       if (!response.ok) {
         throw new Error(data.message || "Something went wrong")
       }
 
-      // Set extracted text
+
     } catch (error) {
       console.log(error.message)
     } finally {
@@ -128,13 +119,12 @@ function FileConverter({ pdfUrl }) {
       setDataLoader(false)
     }
   }
+
   const cleanAndParseJson = (rawJson) => {
-    // Clean the raw JSON string
     const cleanedJsonString = rawJson
       .replace(/^```json\s*/, "")
       .replace(/\s*```$/, "")
 
-    // Parse the cleaned JSON string
     try {
       const parsedJson = JSON.parse(cleanedJsonString)
       return parsedJson
@@ -154,71 +144,96 @@ function FileConverter({ pdfUrl }) {
               <h4 className="drop-file-preview__title">
                 Number Of Pages - {numOfPages}
               </h4>
-              <Button sx={{background:"lightblue"}} onClick={() => ExtractData(imageUrls)}>
-                extract Data from Pdf
+              <Button
+                sx={{ background: "lightblue", marginBottom: "20px" }}
+                onClick={() => ExtractData(imageUrls)}
+              >
+                Extract Data from PDF
               </Button>
-              <Grid container spacing={3}>
-                <Grid container item xs={12} sm={3}>
-                  {imageUrls.map((url, index) => (
-                    <Grid item xs={12} key={index}>
-                      <Box
-                        sx={{
-                          width: "100%",
-                          height: "220px",
-                          cursor: "pointer",
-                        }}
-                        className="img-card"
-                      >
-                        <img
-                          src={url}
-                          alt={`Page ${index + 1}`}
-                          style={{
+              <SplitPane
+                split="vertical"
+                defaultSize="50%"
+                minSize={100}
+                maxSize={-100}
+                resizerStyle={{
+                  width: "5px",
+                  cursor: "col-resize",
+                  backgroundColor: "#ccc",
+                  margin: "0px 2px",
+                  height: "100%",
+                }}
+                paneStyle={{ overflow: "auto" }}
+              >
+                <Grid container spacing={3}>
+                  <Grid
+                    container
+                    item
+                    xs={12}
+                    sm={3}
+                    sx={{ marginLeft: { xs: "0", sm: "10rem" } }}
+                  >
+                    {imageUrls.map((url, index) => (
+                      <Grid item xs={12} key={index}>
+                        <Box
+                          sx={{
                             width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
+                            height: "220px",
+                            cursor: "pointer",
                           }}
-                        />
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          sx={{ position: "absolute", top: 2, right: 2 }}
+                          className="img-card"
                         >
-                          <IconButton
-                            onClick={() => handleClickOpen(url, index)}
-                            className="btn-bg"
+                          <img
+                            src={url}
+                            alt={`Page ${index + 1}`}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{ position: "absolute", top: 2, right: 2 }}
                           >
-                            <RemoveRedEye />
-                          </IconButton>
-                        </Stack>
+                            <IconButton
+                              onClick={() => handleClickOpen(url, index)}
+                              className="btn-bg"
+                            >
+                              <RemoveRedEye />
+                            </IconButton>
+                          </Stack>
+                        </Box>
+                      </Grid>
+                    ))}
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    xs={9}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    {dataLoader ? (
+                        <Box sx={{ alignSelf: "center"}} >
+                           <CircularProgress />
+                        </Box>
+                    ) : (
+                      <Box>
+                        {extractedData?.map((item, index) => (
+                          <InvoiceEdit
+                            key={index}
+                            initialData={cleanAndParseJson(item)}
+                          />
+                        ))}
                       </Box>
-                    </Grid>
-                  ))}
+                    )}
+                  </Grid>
                 </Grid>
-                <Grid
-                  container
-                  item
-                  xs={9}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  {!dataLoader && (
-                    <Box>
-                      {extractedData?.map((item, index) => (
-                        // <div
-                        //   key={index}
-                        //   dangerouslySetInnerHTML={{ __html: item }}
-                        // />
-                        <InvoiceEdit initialData={cleanAndParseJson(item)} />
-                      ))}
-                      {/* {extractedData && ()}} */}
-                    </Box>
-                  )}
-                  {dataLoader && <CircularProgress />}
-                </Grid>
-              </Grid>
+              </SplitPane>
             </>
           )}
         </>
@@ -252,5 +267,4 @@ function FileConverter({ pdfUrl }) {
   )
 }
 
-export default FileConverter
-
+export default FileConverter;
