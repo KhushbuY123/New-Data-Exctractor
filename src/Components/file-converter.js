@@ -151,76 +151,70 @@ function FileConverter({ pdfUrl }) {
                 Extract Data from PDF
               </Button>
               <SplitPane
-                split="vertical"
-                defaultSize="50%"
-                minSize={100}
-                maxSize={-100}
-                resizerStyle={{
-                  width: "5px",
-                  cursor: "col-resize",
-                  backgroundColor: "#ccc",
-                  margin: "0px 2px",
-                  height: "100%",
-                }}
-                paneStyle={{ overflow: "auto" }}
-              >
-                <Grid container spacing={3}>
-                  <Grid
-                    container
-                    item
-                    xs={12}
-                    sm={3}
-                    sx={{ marginLeft: { xs: "0", sm: "10rem" } }}
-                  >
-                    {imageUrls.map((url, index) => (
-                      <Grid item xs={12} key={index}>
-                        <Box
-                          sx={{
-                            width: "100%",
-                            height: "220px",
-                            cursor: "pointer",
-                          }}
-                          className="img-card"
-                        >
-                          <img
-                            src={url}
-                            alt={`Page ${index + 1}`}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                            }}
-                          />
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            sx={{ position: "absolute", top: 2, right: 2 }}
-                          >
-                            <IconButton
-                              onClick={() => handleClickOpen(url, index)}
-                              className="btn-bg"
+                  split="vertical"
+                  defaultSize="50%"
+                  minSize={100}
+                  maxSize={-100}
+                  resizerStyle={{
+                    width: "5px",
+                    cursor: "col-resize",
+                    backgroundColor: "#ccc",
+                    margin: "0px 2px",
+                    height: "100%",
+                  }}
+                  paneStyle={{ overflow: "auto" }}
+                >
+                  <div>
+                    <Grid container spacing={3}>
+                      <Grid
+                        container
+                        item
+                        xs={12}
+                        sm={3}
+                        sx={{ marginLeft: { xs: "0", sm: "10rem" } }}
+                      >
+                        {imageUrls.map((url, index) => (
+                          <Grid item xs={12} key={index}>
+                            <Box
+                              sx={{
+                                width: "100%",
+                                height: "220px",
+                                cursor: "pointer",
+                              }}
+                              className="img-card"
                             >
-                              <RemoveRedEye />
-                            </IconButton>
-                          </Stack>
-                        </Box>
+                              <img
+                                src={url}
+                                alt={`Page ${index + 1}`}
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "cover",
+                                }}
+                              />
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                sx={{ position: "absolute", top: 2, right: 2 }}
+                              >
+                                <IconButton
+                                  onClick={() => handleClickOpen(url, index)}
+                                  className="btn-bg"
+                                >
+                                  <RemoveRedEye />
+                                </IconButton>
+                              </Stack>
+                            </Box>
+                          </Grid>
+                        ))}
                       </Grid>
-                    ))}
-                  </Grid>
-                  <Grid
-                    container
-                    item
-                    xs={9}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
+                    </Grid>
+                  </div>
+                  <div>
                     {dataLoader ? (
-                        <Box sx={{ alignSelf: "center"}} >
-                           <CircularProgress />
-                        </Box>
+                      <Box sx={{ alignSelf: "center" }}>
+                        <CircularProgress />
+                      </Box>
                     ) : (
                       <Box>
                         {extractedData?.map((item, index) => (
@@ -231,9 +225,8 @@ function FileConverter({ pdfUrl }) {
                         ))}
                       </Box>
                     )}
-                  </Grid>
-                </Grid>
-              </SplitPane>
+                  </div>
+                </SplitPane>
             </>
           )}
         </>
